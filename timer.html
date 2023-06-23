@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <title>Pomodoro Timer App</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍅</text></svg>"
+    />
+
     <meta name="Pomodoro Timer App" content="Pomodoro Timer App" />
     <link rel="stylesheet" href="css/styles.css" />
     <script defer type="text/javascript">
@@ -14,12 +19,14 @@
       let mode = 'work';
       let timer;
 
-      // set the initial minutes and seconds displayed on the timer
+      // set some initial values
       function resetTimerValues() {
         if (mode === 'work') {
+          document.getElementById('startTimer').innerHTML = 'Start Working'; // add these strings to constants.
           timer = workMinutes * 60;
           document.getElementById('timerDisplay').innerHTML = `${workMinutes}:00`;
         } else if (mode === 'break') {
+          document.getElementById('startTimer').innerHTML = 'Start Break';
           timer = breakMinutes * 60;
           document.getElementById('timerDisplay').innerHTML = `${breakMinutes}:00`;
         }
@@ -33,8 +40,10 @@
         // change the button text based on the mode.
         if (mode === 'work') {
           document.getElementById('startTimer').innerHTML = 'Working...';
+          mode = 'break';
         } else if (mode === 'break') {
           document.getElementById('startTimer').innerHTML = 'On Break...';
+          mode = 'work';
         }
         timer--; // start the timer one second ahead to make up for the delay in setInterval.
 
@@ -51,15 +60,6 @@
           if (timer < 0) {
             clearInterval(interval);
             alarm.play();
-
-            // change the button text based on the mode.
-            if (mode === 'work') {
-              document.getElementById('startTimer').innerHTML = 'Start Break'; // add these strings to constants.
-              mode = 'break';
-            } else if (mode === 'break') {
-              document.getElementById('startTimer').innerHTML = 'Start Working';
-              mode = 'work';
-            }
             resetTimerValues();
             document.getElementById('startTimer').disabled = false;
           }

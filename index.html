@@ -3,6 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <title>Pomodoro Timer App</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍅</text></svg>"
+    />
     <meta name="description" content="Pomodoro Timer App" />
     <link rel="stylesheet" href="css/styles.css" />
     <script>
@@ -20,10 +24,7 @@
         // store the settings in localstorage
         localStorage.setItem('workMinutes', workMinutes);
         localStorage.setItem('breakMinutes', breakMinutes);
-        localStorage.setItem(
-          'alarmSound',
-          document.getElementById('alarmSound').value,
-        );
+        localStorage.setItem('alarmSound', document.getElementById('alarmSound').value);
 
         return true;
       }
@@ -32,10 +33,8 @@
         // check if the settings are already stored in localstorage
         const workMinutes = localStorage.getItem('workMinutes');
         const breakMinutes = localStorage.getItem('breakMinutes');
-        if (workMinutes)
-          document.getElementById('workMinutes').value = workMinutes;
-        if (breakMinutes)
-          document.getElementById('breakMinutes').value = breakMinutes;
+        if (workMinutes) document.getElementById('workMinutes').value = workMinutes;
+        if (breakMinutes) document.getElementById('breakMinutes').value = breakMinutes;
       }
 
       function testAlarm() {
@@ -64,28 +63,21 @@
         <select name="alarmSound" id="alarmSound">
           <option value="data-scanner.wav">Data Scanner</option>
           <option value="alarm-clock-beep.wav">Alarm Beep</option>
-          <option value="retro-game-emergency-alarm.wav">
-            Retro Game Alarm
-          </option>
+          <option value="retro-game-emergency-alarm.wav">Retro Game Alarm</option>
           <option value="scanning-sci-fi-alarm.wav">Sci-Fi Scan</option>
           <option value="billie-jean.wav">Billie Jean</option>
         </select>
-        <button
-          type="button"
-          onclick="testAlarm()"
-          style="display: inline"
-          class="button-outline"
-        >
+        <button type="button" onclick="testAlarm()" style="display: inline" class="button-outline">
           Test Alarm
         </button>
         <input type="submit" value="Save All 👉" />
       </form>
     </div>
     <p>
-      The idea behind the Pomodoro Technique is to break work into manageable
-      intervals, allowing you to maintain focus and avoid burnout. By working
-      intensely during the Pomodoro intervals and taking regular breaks, you can
-      improve your productivity and maintain a balance between work and rest.
+      The idea behind the Pomodoro Technique is to break work into manageable intervals, allowing
+      you to maintain focus and avoid burnout. By working intensely during the Pomodoro intervals
+      and taking regular breaks, you can improve your productivity and maintain a balance between
+      work and rest.
     </p>
   </body>
 </html>
