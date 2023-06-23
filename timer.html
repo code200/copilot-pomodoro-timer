@@ -5,35 +5,30 @@
     <title>Pomodoro Timer App</title>
     <meta name="Pomodoro Timer App" content="Pomodoro Timer App" />
     <link rel="stylesheet" href="css/styles.css" />
-    <style type="text/css">
-      .button-enabled {
-        cursor: pointer;
-      }
-      .button-disabled {
-        cursor: not-allowed;
-      }
-    </style>
     <script defer type="text/javascript">
-      // get the settings from localstorage
       const workMinutes = localStorage.getItem('workMinutes');
       const breakMinutes = localStorage.getItem('breakMinutes');
       const alarmSound = localStorage.getItem('alarmSound');
       const alarm = new Audio(`alarms/${alarmSound}`);
+      alarm.volume = 0.5;
       let mode = 'work';
+      let timer;
 
       // set the initial minutes and seconds displayed on the timer
-      function setDefaultValues() {
-        document.getElementById('seconds').innerHTML = '00';
+      function resetTimerValues() {
         if (mode === 'work') {
-          document.getElementById('minutes').innerHTML = workMinutes;
+          timer = workMinutes * 60;
+          document.getElementById('timerDisplay').innerHTML = `${workMinutes}:00`;
         } else if (mode === 'break') {
-          document.getElementById('minutes').innerHTML = breakMinutes;
+          timer = breakMinutes * 60;
+          document.getElementById('timerDisplay').innerHTML = `${breakMinutes}:00`;
         }
       }
 
       function startTimer() {
         // disable the startTimer button
-        document.getElementById('startTimer').disabled = true;
+        const starTimerButton = document.getElementById('startTimer');
+        starTimerButton.disabled = true;
 
         // change the button text based on the mode.
         if (mode === 'work') {
@@ -41,75 +36,42 @@
         } else if (mode === 'break') {
           document.getElementById('startTimer').innerHTML = 'On Break...';
         }
+        timer--; // start the timer one second ahead to make up for the delay in setInterval.
 
-        // get the minutes and seconds from the input
-        let minutes = document.getElementById('minutes').textContent;
-        let seconds = document.getElementById('seconds').textContent;
-        console.log(minutes, seconds);
+        const interval = setInterval(() => {
+          let minutes = Number(Math.floor(timer / 60));
+          let seconds = Number(timer % 60);
 
-        // convert them to numbers
-        minutes = Number(minutes);
-        seconds = Number(seconds);
+          // update the time displayed
+          document.getElementById('timerDisplay').textContent = `${minutes}:${seconds
+            .toString()
+            .padStart(2, '0')}`;
 
-        // if seconds is not 0, decrement seconds by 1
-        if (seconds !== 0) {
-          seconds--;
-          console.log('decrement seconds', seconds);
-        }
+          timer--;
+          if (timer < 0) {
+            clearInterval(interval);
+            alarm.play();
 
-        // if seconds is 0, and minutes is not 0, decrement minutes by 1 and set seconds to 59
-        if (seconds === 0 && minutes !== 0) {
-          minutes--;
-          seconds = 59;
-          console.log('set to 59', seconds);
-        }
-
-        // if seconds is 0 and minutes is 0, play the alarm and enable the button to start work or break.
-        if (seconds === 0 && minutes === 0) {
-          alarm.loop = false;
-          alarm.volume = 0.3;
-          alarm.play();
-
-          // change the button text based on the mode.
-          if (mode === 'work') {
-            document.getElementById('startTimer').innerHTML = 'Start Break'; // add these strings to constants.
-            mode = 'break';
-          } else if (mode === 'break') {
-            document.getElementById('startTimer').innerHTML = 'Start Working';
-            mode = 'work';
+            // change the button text based on the mode.
+            if (mode === 'work') {
+              document.getElementById('startTimer').innerHTML = 'Start Break'; // add these strings to constants.
+              mode = 'break';
+            } else if (mode === 'break') {
+              document.getElementById('startTimer').innerHTML = 'Start Working';
+              mode = 'work';
+            }
+            resetTimerValues();
+            document.getElementById('startTimer').disabled = false;
           }
-          setDefaultValues();
-          document.getElementById('startTimer').disabled = false;
-
-          return;
-        }
-
-        // if seconds or minutes are less than 10, add a leading 0
-        if (seconds < 10) {
-          seconds = `0${seconds}`;
-        }
-        if (minutes < 10) {
-          minutes = `0${minutes}`;
-        }
-
-        // update the time displayed
-        document.getElementById('minutes').textContent = minutes;
-        document.getElementById('seconds').textContent = seconds;
-
-        // call the startTimer function again after 1 second
-        setTimeout(startTimer, 1000);
+        }, 1000);
       }
     </script>
   </head>
-  <body onLoad="setDefaultValues()">
+  <body onLoad="resetTimerValues()">
     <h1>Pomodoro🍅 Timer</h1>
     <div class="timer-container">
       <div class="timer">
-        <div class="time-display" id="timeDisplay">
-          <span id="minutes">25</span>
-          <span>:</span>
-          <span id="seconds">00</span>
-        </div>
+        <div class="timer-display" id="timerDisplay">&nbsp;</div>
         <div class="timer-controls">
           <button id="startTimer" onclick="startTimer()">Start Working</button>
         </div>
